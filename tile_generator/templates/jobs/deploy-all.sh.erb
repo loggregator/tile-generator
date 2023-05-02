@@ -218,11 +218,12 @@ function wait_till_running() {
 }
 
 function get_stack() {
-	if $CF stacks 2>&1 | grep "cflinuxfs3" > /dev/null; then
-		echo >&2 "Using cflinuxfs3 stack"
-		echo "-s cflinuxfs3"
-	else
+	latest_stack="$($CF stacks | grep 'cflinuxfs' | sort -Vr | head -n1 | awk '{print $1}')"
+	if [ -z "$latest_stack" ]; then
 		echo >&2 "Using default stack"
+	else
+		echo >&2 "Using $latest_stack stack"
+		echo "-s $latest_stack"
 	fi
 }
 
